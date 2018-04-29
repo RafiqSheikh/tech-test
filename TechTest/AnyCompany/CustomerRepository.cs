@@ -1,33 +1,46 @@
-﻿using System;
+﻿using AnyCompany.Configuration;
+using System;
 using System.Data.SqlClient;
 
 namespace AnyCompany
 {
     public static class CustomerRepository
     {
-        private static string ConnectionString = @"Data Source=(local);Database=Customers;User Id=admin;Password=password;";
-
-        public static Customer Load(int customerId)
+        public static Customer Load(int customerId, IConfigurationsHandler configurations)
         {
-            Customer customer = new Customer();
-
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            connection.Open();
-
-            SqlCommand command = new SqlCommand("SELECT * FROM Customer WHERE CustomerId = " + customerId,
-                connection);
-            var reader = command.ExecuteReader();
-
-            while (reader.Read())
+            SqlConnection connection = new SqlConnection();
+            try
             {
-                customer.Name = reader["Name"].ToString();
-                customer.DateOfBirth = DateTime.Parse(reader["DateOfBirth"].ToString());
-                customer.Country = reader["Country"].ToString();
+                connection.ConnectionString = configurations.GetConnectionString();
+
+                connection.Open();
+
+                SqlCommand command = new SqlCommand("SELECT * FROM Customer WHERE CustomerId = " + customerId,
+                    connection);
+                var reader = command.ExecuteReader();
+
+                Customer customer = new Customer();
+
+                while (reader.Read())
+                {
+                    customer.Name = reader["Name"].ToString();
+                    customer.DateOfBirth = DateTime.Parse(reader["DateOfBirth"].ToString());
+                    customer.Country = reader["Country"].ToString();
+                }
+                return customer;
             }
-
-            connection.Close();
-
-            return customer;
+            catch (Exception ex)
+            {
+                // log error here
+                return null;
+            }
+            finally
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
         }
     }
 }

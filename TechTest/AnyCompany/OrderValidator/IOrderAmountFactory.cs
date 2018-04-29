@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnyCompany.Tests
+namespace AnyCompany.OrderValidator
 {
-    public class Class1
+   public  interface IOrderAmountFactory
     {
+        IOrderAmount GetOrderAmount(double amount);
     }
 }
