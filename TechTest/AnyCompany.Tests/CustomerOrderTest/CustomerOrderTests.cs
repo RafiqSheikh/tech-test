@@ -122,5 +122,79 @@ namespace AnyCompany.Tests.CustomerOrderTest
             Assert.That(success, Is.True);
 
         }
+
+        [Test]
+        public void When_Customer_Id_Is_Negative_Then_Return_GetOrder_Is_Null()
+        {
+            
+            var orderAmountFactory = new OrderAmountFactory();
+            var orderAmountValidator = new OrderAmountValidator();
+            var configurations = new ConfigurationsHandler();
+            var orderRepository = new OrderRepository();
+            var vatService = new VatService();
+            
+            var orderService = new OrderService(orderAmountFactory,
+                                                  orderAmountValidator,
+                                                  vatService,
+                                                  configurations,
+                                                  orderRepository);
+
+            int customerId = -1;
+
+            var success = orderService.GetOrder( customerId);
+
+            Assert.Null(success);
+
+        }
+        [Test]
+        public void When_Customer_Id_Is_Zero_Then_Return_GetOrder_Is_Null()
+        {
+
+            var orderAmountFactory = new OrderAmountFactory();
+            var orderAmountValidator = new OrderAmountValidator();
+            var configurations = new ConfigurationsHandler();
+            var orderRepository = new OrderRepository();
+            var vatService = new VatService();
+
+            var orderService = new OrderService(orderAmountFactory,
+                                                  orderAmountValidator,
+                                                  vatService,
+                                                  configurations,
+                                                  orderRepository);
+
+            int customerId = 0;
+
+            var success = orderService.GetOrder(customerId);
+
+            Assert.Null(success);
+
+        }
+
+        [Test]
+        public void When_Customer_Id_Is_Positive_Then_Return_GetOrder_Is_Not_Null()
+        {
+
+            // fails as unable to access the database
+
+            var orderAmountFactory = new OrderAmountFactory();
+            var orderAmountValidator = new OrderAmountValidator();
+            var configurations = new ConfigurationsHandler();
+            var orderRepository = new OrderRepository();
+            var vatService = new VatService();
+
+            var orderService = new OrderService(orderAmountFactory,
+                                                  orderAmountValidator,
+                                                  vatService,
+                                                  configurations,
+                                                  orderRepository);
+
+            int customerId = 12;
+
+            var success = orderService.GetOrder(customerId);
+
+            Assert.NotNull(success);
+
+        }
+
     }
 }

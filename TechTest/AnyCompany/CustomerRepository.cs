@@ -1,5 +1,6 @@
 ﻿using AnyCompany.Configuration;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace AnyCompany
@@ -19,7 +20,7 @@ namespace AnyCompany
                     connection);
                 var reader = command.ExecuteReader();
 
-                Customer customer = new Customer();
+                var customer = new Customer();
 
                 while (reader.Read())
                 {

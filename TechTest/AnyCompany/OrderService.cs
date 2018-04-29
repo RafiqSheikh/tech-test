@@ -3,6 +3,7 @@ using AnyCompany.OrderValidator;
 using AnyCompany.Types;
 using AnyCompany.VAT;
 using System;
+using System.Collections.Generic;
 
 namespace AnyCompany
 {
@@ -20,7 +21,7 @@ namespace AnyCompany
                             IOrderAmountValidator orderAmountValidator,
                             IVatService vatService,
                             IConfigurationsHandler configurations,
-                            IOrderRepository orderRepository )
+                            IOrderRepository orderRepository)
         {
             this.orderAmountFactory = orderAmountFactory;
             this.orderAmountValidator = orderAmountValidator;
@@ -56,6 +57,35 @@ namespace AnyCompany
             {
                 // log error here
                 return false;
+            }
+        }
+
+        public CustomerOrder GetOrder(int customerId)
+        {
+            try
+            {
+                if (customerId <= 0)
+                    return null;
+
+                var customer = CustomerRepository.Load(customerId, configurations);
+
+                if (customer == null)
+                    return null;
+
+                var orders = orderRepository.GetOrders(customerId, configurations);
+
+                var customerOrder = new CustomerOrder
+                {
+                    Customer = customer
+                };
+                customerOrder.Orders.AddRange(orders);
+
+                return customerOrder;
+            }
+            catch (Exception ex)
+            {
+                // log error here
+                return null;
             }
         }
     }
